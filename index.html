@@ -41,10 +41,10 @@
 </head>
 <body class="bg-pink-50 overflow-x-hidden selection:bg-pink-200">
 
-    <!-- Audio Player -->
-    <div id="audio-container" class="fixed bottom-4 right-4 z-50 hidden">
-        <iframe id="bg-music" width="300" height="150" src="https://mobcup.com.co/thangapoove-ringtone-download-mdgsynh" frameborder="0" class="rounded-lg shadow-2xl"></iframe>
-    </div>
+    <!-- Background Audio Player -->
+    <audio id="bg-music" loop preload="auto">
+        <source src="https://mobcup.com.co/thangapoove-ringtone-download-mdgsynh" type="audio/mpeg">
+    </audio>
 
     <!-- Floating Balloons Container -->
     <div id="balloon-container" class="fixed inset-0 pointer-events-none z-50 overflow-hidden"></div>
@@ -204,24 +204,25 @@ Happiest bday ammuu !
         }
 
         // Music Logic
-        const audioContainer = document.getElementById('audio-container');
-        let isMusicVisible = false;
+        const audio = document.getElementById('bg-music');
+        let isPlaying = false;
 
         function toggleMusic(forcePlay = false) {
             const btn = document.getElementById('music-btn');
             const icon = btn.querySelector('i');
             const text = btn.querySelector('span');
 
-            if (forcePlay || !isMusicVisible) {
-                audioContainer.classList.remove('hidden');
-                isMusicVisible = true;
-                btn.classList.remove('bg-gray-100', 'text-gray-600');
-                btn.classList.add('bg-green-100', 'text-green-700', 'border-green-200');
-                icon.className = 'fas fa-volume-up';
-                text.innerText = 'Playing';
+            if (forcePlay || !isPlaying) {
+                audio.play().then(() => {
+                    isPlaying = true;
+                    btn.classList.remove('bg-gray-100', 'text-gray-600');
+                    btn.classList.add('bg-green-100', 'text-green-700', 'border-green-200');
+                    icon.className = 'fas fa-volume-up';
+                    text.innerText = 'Playing';
+                }).catch(e => console.log("Audio play blocked by browser:", e));
             } else {
-                audioContainer.classList.add('hidden');
-                isMusicVisible = false;
+                audio.pause();
+                isPlaying = false;
                 btn.classList.add('bg-gray-100', 'text-gray-600');
                 btn.classList.remove('bg-green-100', 'text-green-700', 'border-green-200');
                 icon.className = 'fas fa-volume-mute';
